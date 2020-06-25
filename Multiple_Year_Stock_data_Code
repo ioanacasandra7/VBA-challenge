@@ -1,0 +1,70 @@
+Attribute VB_Name = "VBAchallenge"
+Sub VBAchallenge():
+'to check the sheet we are working on
+MsgBox ActiveSheet.Name
+'to check the number of rows on the working sheet
+MsgBox ActiveSheet.UsedRange.Rows.Count
+
+'define everything
+    Dim ws As Worksheet
+    Dim ticker As String
+    Dim vol As Double
+    Dim year_open As Double
+    Dim year_close As Double
+    Dim yearly_change As Double
+    Dim percent_change As Double
+    Dim LastRow As Double
+    LastRow = 797711
+   'set headers
+    Cells(1, 9).Value = "Ticker"
+    Cells(1, 10).Value = "Yearly Change"
+    Cells(1, 11).Value = "Percent Change"
+    Cells(1, 12).Value = "Total Stock Volume"
+    Summary_Table_Row = 1
+'loop
+For I = 2 To LastRow
+            If Cells(I + 1, 1).Value <> Cells(I, 1).Value Then
+
+   ticker = Cells(I, 1).Value
+    vol = Cells(I, 7).Value
+    year_open = Cells(I, 3).Value
+    year_close = Cells(I, 6).Value
+    yearly_change = year_close - year_open
+    percent_change = (year_close - year_open) / year_close
+    Summary_Table_Row = Summary_Table_Row + 1
+    Cells(Summary_Table_Row, 9).Value = ticker
+            Cells(Summary_Table_Row, 10).Value = yearly_change
+            Cells(Summary_Table_Row, 11).Value = percent_change
+            Cells(Summary_Table_Row, 12).Value = vol
+         
+        
+   End If
+    Next I
+    
+'set colors for column Yearly change
+Dim r As Range
+    Dim g As Long
+    Dim c As Long
+    Dim color_cell As Range
+    
+    Set r = Range("J2:J760192")
+    c = r.Cells.Count
+    
+    For g = 1 To c
+    Set color_cell = r(g)
+    Select Case color_cell
+        Case Is >= 0
+            With color_cell
+                .Interior.Color = vbGreen
+            End With
+        Case Is < 0
+            With color_cell
+                .Interior.Color = vbRed
+            End With
+       End Select
+    Next g
+'set Year Change column as %
+Range("K1:K760192").NumberFormat = "0.00%"
+   
+End Sub
+
